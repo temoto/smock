@@ -1,0 +1,14 @@
+smock is Simple Mock for Python.
+
+Fork of Ian Bicking's minimock.
+
+Features:
+    * monkey patching (replacing of original functions on-the-fly)
+    * searching for functions through stack frame analysis
+        (no ugly stupid __import__ asspain)
+    * object specification through plain string like 'os.fork'
+    * mocked objects call history
+    * easy creating of simple mocks like return this or call that
+
+Everything except call history is made by Ian Bicking.
+See his absorbing blog at http://blog.ianbicking.org/.
