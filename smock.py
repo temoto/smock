@@ -60,7 +60,7 @@ def lookup_by_name(name, nsdicts):
 
     """
     for nsdict in nsdicts:
-        attrs = name.split(".")
+        attrs = name.split('.')
         names = []
 
         while attrs:
@@ -100,7 +100,7 @@ def mock(name, nsdicts=None, mock_obj=None, **kw):
         >>> os.path.isfile
         <Mock ... os.path.isfile>
         >>> os.path.isfile("/foo/bar/baz")
-        Called os.path.isfile('/foo/bar/baz')
+        >>> is_called('os.path.isfile', '/foo/bar/baz')
         True
         >>> mock_id = id(os.path.isfile)
         >>> mock_id != isfile_id
@@ -148,10 +148,7 @@ def mock(name, nsdicts=None, mock_obj=None, **kw):
     mocked.append((original, nsdict, obj_name, attrs))
 
 def restore():
-    """
-    Restore all mocked objects.
-
-    """
+    """Restore all mocked objects"""
     global mocked
 
     # Restore the objects in the reverse order of their mocking to assure
@@ -167,14 +164,21 @@ def restore():
             setattr(tmp, attrs[-1], original)
     return
 
-def is_called(object_name):
-    """
-    Checks whether mock specified by object name was called.
+def is_called(object_name, *args, **kwargs):
+    """Checks whether mock specified by object name was called"""
 
-    """
-    global call_history
+    if not call_history:
+        return False
 
-    object_history = filter(lambda x: x[0] == object_name, call_history)
+    object_history = call_history[:]
+    for arg in args:
+        object_history = filter(lambda x: arg in x[1], object_history)
+        if not object_history:
+            return False
+    for kwarg_key, kwarg_value in kwargs.iteritems():
+        object_history = filter(lambda x: x[2].get(kwarg_key) == kwarg_value, object_history)
+        if not object_history:
+            return False
     return bool(object_history)
 
 
@@ -200,10 +204,6 @@ class Mock(object):
         parts = [repr(a) for a in args]
         parts.extend(
             '%s=%r' % (items) for items in sorted(kw.items()))
-        msg = 'Called %s(%s)' % (self.mock_name, ', '.join(parts))
-        if len(msg) > 80:
-            msg = 'Called %s(\n    %s)' % (
-                self.mock_name, ',\n    '.join(parts))
         call_history.append( (self.mock_name, args, kw) )
         return self._mock_return(*args, **kw)
 
