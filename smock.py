@@ -165,7 +165,7 @@ def restore():
     return
 
 def is_called(object_name, *args, **kwargs):
-    """Checks whether mock specified by object name was called"""
+    """Checks whether mock specified by object name was called."""
 
     if not call_history:
         return False
@@ -209,7 +209,7 @@ class Mock(object):
 
     def _mock_return(self, *args, **kw):
         if self.mock_raises is not None:
-            raise self.mock_raises
+            raise self.mock_raises # pylint: disable-msg=E0702
         elif self.mock_returns is not None:
             return self.mock_returns
         elif self.mock_returns_iter is not None:
