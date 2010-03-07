@@ -27,7 +27,7 @@ got. We've provided fake return calls (for the ``smtplib.SMTP()``
 constructor). These are all the core parts of a mock library.
 """
 
-__all__ = ["mock", "restore", "Mock"]
+__all__ = ['Mock', 'mock', 'restore', 'is_called', 'call_history']
 
 import inspect
 
