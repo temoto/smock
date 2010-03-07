@@ -170,7 +170,7 @@ def is_called(object_name, *args, **kwargs):
     if not call_history:
         return False
 
-    object_history = call_history[:]
+    object_history = filter(lambda x: object_name == x[0], call_history)
     for arg in args:
         object_history = filter(lambda x: arg in x[1], object_history)
         if not object_history:
