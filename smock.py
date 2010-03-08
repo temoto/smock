@@ -27,7 +27,7 @@ got. We've provided fake return calls (for the ``smtplib.SMTP()``
 constructor). These are all the core parts of a mock library.
 """
 
-__all__ = ['Mock', 'mock', 'restore', 'is_called', 'call_history']
+__all__ = ['Mock', 'mock', 'cleanup', 'restore', 'is_called', 'call_history']
 
 import inspect
 
@@ -163,6 +163,13 @@ def restore():
                 tmp = getattr(tmp, attr)
             setattr(tmp, attrs[-1], original)
     return
+
+def cleanup():
+    """Total cleaning: clear call history and restore all mocked objects."""
+
+    global call_history
+    call_history[:] = []
+    restore()
 
 def is_called(object_name, *args, **kwargs):
     """Checks whether mock specified by object name was called."""
